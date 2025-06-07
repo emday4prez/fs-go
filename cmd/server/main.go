@@ -4,20 +4,18 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/emday4prez/fs-go/internal/api"
 )
 
 func main() {
-	http.HandleFunc("/", welcomeHandler)
+	router := api.NewRouter()
 
 	port := ":8080"
 	fmt.Printf("Server is starting on port %s\n", port)
 
-	err := http.ListenAndServe(port, nil)
+	err := http.ListenAndServe(port, router)
 	if err != nil {
 		log.Fatal("Failed to start server: ", err)
 	}
-}
-
-func welcomeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, World! Wecome to the Go File Server")
 }
