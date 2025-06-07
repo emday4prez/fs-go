@@ -6,10 +6,13 @@ import (
 	"net/http"
 
 	"github.com/emday4prez/fs-go/internal/api"
+	"github.com/emday4prez/fs-go/internal/service"
 )
 
 func main() {
-	router := api.NewRouter()
+	fileService := service.NewFileService()
+
+	router := api.NewRouter(fileService)
 
 	port := ":8080"
 	fmt.Printf("Server is starting on port %s\n", port)
