@@ -12,6 +12,7 @@ func NewRouter(fs *service.FileService) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", server.WelcomeHandler)
+	mux.HandleFunc("/upload", server.ShowUploadPage)
 
 	return mux
 }

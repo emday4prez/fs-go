@@ -2,6 +2,8 @@ package api
 
 import (
 	"fmt"
+	"html/template"
+	"log"
 	"net/http"
 
 	"github.com/emday4prez/fs-go/internal/service"
@@ -19,4 +21,18 @@ func NewServer(fs *service.FileService) *Server {
 
 func (s *Server) WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to the go file server.")
+}
+
+func (s *Server) ShowUploadPage(w http.ResponseWriter, r *http.Request) {
+	tmp, err := template.ParseFiles("web/template/upload.html")
+	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "There was a problem preparing the page.", http.StatusInternalServerError)
+		return
+	}
+	err = tmp.Execute(w, nil)
+	if err != nil {
+		log.Printf("error executing template: %v", err)
+		http.Error(w, "there was a problem rendering the page", http.StatusInternalServerError)
+	}
 }
