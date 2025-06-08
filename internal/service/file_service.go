@@ -48,3 +48,26 @@ func (s *FileService) SaveFile(fileHeader *multipart.FileHeader) error {
 	log.Printf("saved file to %s", dstPath)
 	return nil
 }
+
+func (s *FileService) ListFiles() ([]string, error) {
+	uploadDir := "./uploads"
+
+	//returns a sorted list of entries in a dir
+	entries, err := os.ReadDir(uploadDir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return []string{}, nil
+		}
+		return nil, fmt.Errorf("failed to read uploads dir: %w", err)
+	}
+
+	var filenames []string
+
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			filenames = append(filenames, entry.Name())
+		}
+	}
+
+	return filenames, nil
+}

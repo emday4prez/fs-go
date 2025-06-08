@@ -23,6 +23,7 @@ func NewRouter(fs *service.FileService) http.Handler {
 	}
 
 	mux.HandleFunc("/upload", uploadMultiplexer)
+	mux.HandleFunc("/list", server.ShowListPage)
 
 	return mux
 }

@@ -65,3 +65,24 @@ func (s *Server) UploadHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "file '%s' uploaded successfully!", fileHeader.Filename)
 
 }
+
+func (s *Server) ShowListPage(w http.ResponseWriter, r *http.Request) {
+	filenames, err := s.fileService.ListFiles()
+	if err != nil {
+		log.Printf("Error listing files: %v", err)
+		http.Error(w, "Could not retrieve file list.", http.StatusInternalServerError)
+		return
+	}
+
+	tmp, err := template.ParseFiles("web/template/list.html")
+	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "There was a problem preparing the page.", http.StatusInternalServerError)
+		return
+	}
+	err = tmp.Execute(w, filenames)
+	if err != nil {
+		log.Printf("error executing template: %v", err)
+		http.Error(w, "there was a problem rendering the page", http.StatusInternalServerError)
+	}
+}

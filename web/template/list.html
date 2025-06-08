@@ -1,0 +1,84 @@
+<!-- Filename: web/template/list.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go File Server - Files</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 10px;
+            border-bottom: 1px solid #eef;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        .filename {
+            font-weight: 500;
+            color: #444;
+        }
+        .download-link {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .download-link:hover {
+            background-color: #e9f5ff;
+        }
+        .no-files {
+            color: #888;
+            text-align: center;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Uploaded Files</h2>
+        
+        {{if .}}
+            <ul>
+                {{range .}}
+                    <li>
+                        <span class="filename">{{.}}</span>
+                        <a href="/download/{{.}}" class="download-link">Download</a>
+                    </li>
+                {{end}}
+            </ul>
+        {{else}}
+            <p class="no-files">No files uploaded yet.</p>
+        {{end}}
+
+    </div>
+</body>
+</html>
