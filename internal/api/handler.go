@@ -36,3 +36,32 @@ func (s *Server) ShowUploadPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "there was a problem rendering the page", http.StatusInternalServerError)
 	}
 }
+
+func (s *Server) UploadHandler(w http.ResponseWriter, r *http.Request) {
+
+	//parse headers, max size 10mb
+	if err := r.ParseMultipartForm(10 << 20); err != nil {
+		http.Error(w, "file too big, max 10MB", http.StatusBadRequest)
+		return
+	}
+
+	// get file from 'name' html attribute
+	_, fileHeader, err := r.FormFile("file")
+	if err != nil {
+		log.Printf("Error retrieving file from: %v", err)
+		http.Error(w, "error retrieving the file", http.StatusInternalServerError)
+		return
+	}
+
+	// call service
+	err = s.fileService.SaveFile(fileHeader)
+	if err != nil {
+		log.Printf("error saving file: %v", err)
+		http.Error(w, "error saving the file", http.StatusInternalServerError)
+		return
+	}
+
+	// send response
+	fmt.Fprintf(w, "file '%s' uploaded successfully!", fileHeader.Filename)
+
+}
