@@ -8,11 +8,21 @@ import (
 
 func NewRouter(fs *service.FileService) http.Handler {
 	server := NewServer(fs)
-
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", server.WelcomeHandler)
-	mux.HandleFunc("/upload", server.ShowUploadPage)
+
+	uploadMultiplexer := func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			server.ShowUploadPage(w, r)
+		} else if r.Method == http.MethodPost {
+			server.UploadHandler(w, r)
+		} else {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	}
+
+	mux.HandleFunc("/upload", uploadMultiplexer)
 
 	return mux
 }
