@@ -15,6 +15,7 @@ func Load() *Config {
 		UploadDir: "./uploads",
 	}
 
+	// returns value and bool for exists
 	if port, ok := os.LookupEnv("PORT"); ok {
 		cfg.Port = ":" + port
 	}
