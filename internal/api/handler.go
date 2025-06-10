@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"path/filepath"
+	"strings"
 
 	"github.com/emday4prez/fs-go/internal/service"
 )
@@ -85,4 +87,16 @@ func (s *Server) ShowListPage(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error executing template: %v", err)
 		http.Error(w, "there was a problem rendering the page", http.StatusInternalServerError)
 	}
+}
+
+func (s *Server) DownloadHandler(w http.ResponseWriter, r *http.Request) {
+	filename := strings.TrimPrefix(r.URL.Path, "/download/")
+	if filename == "" {
+		http.NotFound(w, r)
+		return
+	}
+
+	filePath := filepath.Join("./uploads", filename)
+
+	http.ServeFile(w, r, filePath)
 }
