@@ -3,11 +3,12 @@ package api
 import (
 	"net/http"
 
+	"github.com/emday4prez/fs-go/internal/config"
 	"github.com/emday4prez/fs-go/internal/service"
 )
 
-func NewRouter(fs *service.FileService) http.Handler {
-	server := NewServer(fs)
+func NewRouter(fs *service.FileService, cfg *config.Config) http.Handler {
+	server := NewServer(fs, cfg)
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", server.WelcomeHandler)

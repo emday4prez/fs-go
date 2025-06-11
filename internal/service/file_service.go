@@ -9,11 +9,14 @@ import (
 )
 
 type FileService struct {
+	uploadDir string
 }
 
-func NewFileService() *FileService {
+func NewFileService(uploadDir string) *FileService {
 	log.Println("new FileService created")
-	return &FileService{}
+	return &FileService{
+		uploadDir: uploadDir,
+	}
 }
 
 func (s *FileService) SaveFile(fileHeader *multipart.FileHeader) error {
@@ -25,13 +28,13 @@ func (s *FileService) SaveFile(fileHeader *multipart.FileHeader) error {
 	defer src.Close()
 
 	//create destination dir, mkdirAll does not error if dir exists
-	uploadDir := "./uploads"
-	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
+
+	if err := os.MkdirAll(s.uploadDir, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to create upload dir: %w", err)
 	}
 
 	//create destination file on server
-	dstPath := fmt.Sprintf("%s/%s", uploadDir, fileHeader.Filename)
+	dstPath := fmt.Sprintf("%s/%s", s.uploadDir, fileHeader.Filename)
 	dst, err := os.Create(dstPath)
 	if err != nil {
 		return fmt.Errorf("failed to create destination file: %w", err)
@@ -50,10 +53,9 @@ func (s *FileService) SaveFile(fileHeader *multipart.FileHeader) error {
 }
 
 func (s *FileService) ListFiles() ([]string, error) {
-	uploadDir := "./uploads"
 
 	//returns a sorted list of entries in a dir
-	entries, err := os.ReadDir(uploadDir)
+	entries, err := os.ReadDir(s.uploadDir)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return []string{}, nil

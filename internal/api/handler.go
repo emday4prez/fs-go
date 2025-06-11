@@ -8,16 +8,19 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/emday4prez/fs-go/internal/config"
 	"github.com/emday4prez/fs-go/internal/service"
 )
 
 type Server struct {
 	fileService *service.FileService
+	config      *config.Config
 }
 
-func NewServer(fs *service.FileService) *Server {
+func NewServer(fs *service.FileService, cfg *config.Config) *Server {
 	return &Server{
 		fileService: fs,
+		config:      cfg,
 	}
 }
 
@@ -96,7 +99,7 @@ func (s *Server) DownloadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filePath := filepath.Join("./uploads", filename)
+	filePath := filepath.Join(s.config.UploadDir, filename)
 
 	http.ServeFile(w, r, filePath)
 }
