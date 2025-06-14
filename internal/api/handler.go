@@ -65,10 +65,8 @@ func (s *Server) UploadHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "error saving the file", http.StatusInternalServerError)
 		return
 	}
-
 	// send response
 	fmt.Fprintf(w, "file '%s' uploaded successfully!", fileHeader.Filename)
-
 }
 
 func (s *Server) ShowListPage(w http.ResponseWriter, r *http.Request) {

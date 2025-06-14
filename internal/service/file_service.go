@@ -53,7 +53,6 @@ func (s *FileService) SaveFile(fileHeader *multipart.FileHeader) error {
 }
 
 func (s *FileService) ListFiles() ([]string, error) {
-
 	//returns a sorted list of entries in a dir
 	entries, err := os.ReadDir(s.uploadDir)
 	if err != nil {
