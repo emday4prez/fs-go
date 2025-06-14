@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"path/filepath"
 	"strings"
 
 	"github.com/emday4prez/fs-go/internal/config"
@@ -97,7 +96,12 @@ func (s *Server) DownloadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filePath := filepath.Join(s.config.UploadDir, filename)
+	_, filePath, err := s.fileService.GetFile(filename)
+	if err != nil {
+		log.Printf("Error getting file: %v", err)
+		http.Error(w, "File not found.", http.StatusNotFound)
+		return
+	}
 
 	http.ServeFile(w, r, filePath)
 }
