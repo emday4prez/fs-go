@@ -26,6 +26,7 @@ func NewRouter(fs *service.FileService, cfg *config.Config) http.Handler {
 	mux.HandleFunc("/upload", uploadMultiplexer)
 	mux.HandleFunc("/list", server.ShowListPage)
 	mux.HandleFunc("/download/", server.DownloadHandler)
+	mux.HandleFunc("/api/files", server.ListFilesAPI)
 
 	return mux
 }

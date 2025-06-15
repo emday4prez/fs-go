@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -104,4 +105,23 @@ func (s *Server) DownloadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.ServeFile(w, r, filePath)
+}
+
+func (s *Server) ListFilesAPI(w http.ResponseWriter, r *http.Request) {
+	filenames, err := s.fileService.ListFiles()
+	if err != nil {
+		log.Printf("Error listing files for API: %v", err)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+
+		json.NewEncoder(w).Encode(map[string]string{"error": "Could not retrieve file list."})
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+
+	err = json.NewEncoder(w).Encode(filenames)
+	if err != nil {
+
+		log.Printf("Error encoding files to JSON: %v", err)
+	}
 }
