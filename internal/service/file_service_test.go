@@ -69,3 +69,35 @@ func TestFileService_ListFiles_Error(t *testing.T) {
 		t.Errorf("ListFiles() expected an error, but got nil")
 	}
 }
+
+func TestFileService_SaveFile(t *testing.T) {
+	// --- Arrange ---
+	var saveCalled bool
+
+	mockStorage := &MockStorage{
+
+		SaveFunc: func(fileHeader *multipart.FileHeader) (string, error) {
+			saveCalled = true
+			return "mock/path", nil
+		},
+	}
+
+	fileService := NewFileService(mockStorage)
+	dummyFileHeader := &multipart.FileHeader{}
+
+	// --- Act ---
+
+	err := fileService.SaveFile(dummyFileHeader)
+
+	// --- Assert ---
+
+	if err != nil {
+		t.Errorf("SaveFile() returned an unexpected error: %v", err)
+	}
+
+	// proves that the service layer correctly delegated the call
+	// to the storage layer.
+	if !saveCalled {
+		t.Errorf("Expected storage.Save() to be called, but it was not.")
+	}
+}
