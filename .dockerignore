@@ -1,0 +1,14 @@
+
+Dockerfile
+.dockerignore
+
+
+.git
+.gitignore
+
+
+/uploads
+/my-custom-uploads
+
+
+.vscode/

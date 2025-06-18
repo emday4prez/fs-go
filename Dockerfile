@@ -13,11 +13,10 @@ RUN go mod download
 # Copy the rest of the source code.
 COPY . .
 
-# Build the Go application.
+# build 
 # -o /server: specifies the output file name and location.
-# -ldflags="-w -s": makes the binary smaller by stripping debug information.
-# CGO_ENABLED=0: creates a statically linked binary, which is important for
-# running in a minimal container like alpine.
+# -ldflags="-w -s": makes the binary smaller by stripping debug information
+# CGO_ENABLED=0: creates a statically linked binary (important for minimal container)
 RUN CGO_ENABLED=0 go build -o /server -ldflags="-w -s" ./cmd/server/main.go
 
 
