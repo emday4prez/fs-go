@@ -7,7 +7,9 @@ WORKDIR /app
 # Copy the go.mod and go.sum files first. This is a Docker caching trick.
 # If these files don't change, Docker will use the cached dependencies layer,
 # speeding up subsequent builds.
-COPY go.mod go.sum ./
+# go.sum is the lock file for dependency management, 
+# this project only uses standard lib so there is no sum file so the * skips it
+COPY go.mod go.sum* ./
 RUN go mod download
 
 # Copy the rest of the source code.
