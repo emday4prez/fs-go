@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -15,12 +16,14 @@ import (
 type Server struct {
 	fileService *service.FileService
 	config      *config.Config
+	logger      *slog.Logger
 }
 
-func NewServer(fs *service.FileService, cfg *config.Config) *Server {
+func NewServer(fs *service.FileService, cfg *config.Config, log *slog.Logger) *Server {
 	return &Server{
 		fileService: fs,
 		config:      cfg,
+		logger:      log,
 	}
 }
 
