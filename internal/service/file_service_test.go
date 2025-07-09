@@ -85,18 +85,14 @@ func TestFileService_SaveFile(t *testing.T) {
 	fileService := NewFileService(mockStorage)
 	dummyFileHeader := &multipart.FileHeader{}
 
-	// --- Act ---
-
 	err := fileService.SaveFile(dummyFileHeader)
-
-	// --- Assert ---
 
 	if err != nil {
 		t.Errorf("SaveFile() returned an unexpected error: %v", err)
 	}
 
 	// proves that the service layer correctly delegated the call
-	// to the storage layer.
+	// to the storage layer
 	if !saveCalled {
 		t.Errorf("Expected storage.Save() to be called, but it was not.")
 	}
