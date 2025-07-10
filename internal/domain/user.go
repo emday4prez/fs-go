@@ -22,3 +22,9 @@ func NewUser(id, username, password string) (*User, error) {
 		HashedPassword: string(hashedPassword),
 	}, nil
 }
+
+func (u *User) CheckPassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.HashedPassword), []byte(password))
+
+	return err == nil
+}
