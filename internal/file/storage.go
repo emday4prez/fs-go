@@ -1,4 +1,4 @@
-package storage
+package file
 
 import (
 	"fmt"
@@ -7,6 +7,12 @@ import (
 	"os"
 	"path/filepath"
 )
+
+type Storage interface {
+	Save(fileHeader *multipart.FileHeader) (string, error)
+	List() ([]string, error)
+	Get(filename string) (io.ReadCloser, string, error)
+}
 
 type LocalStorage struct {
 	uploadDir string

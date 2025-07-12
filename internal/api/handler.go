@@ -9,16 +9,16 @@ import (
 	"strings"
 
 	"github.com/emday4prez/fs-go/internal/config"
-	"github.com/emday4prez/fs-go/internal/service"
+	"github.com/emday4prez/fs-go/internal/file"
 )
 
 type Server struct {
-	fileService *service.FileService
+	fileService *file.FileService
 	config      *config.Config
 	logger      *slog.Logger
 }
 
-func NewServer(fs *service.FileService, cfg *config.Config, log *slog.Logger) *Server {
+func NewServer(fs *file.FileService, cfg *config.Config, log *slog.Logger) *Server {
 	return &Server{
 		fileService: fs,
 		config:      cfg,

@@ -7,8 +7,7 @@ import (
 
 	"github.com/emday4prez/fs-go/internal/api"
 	"github.com/emday4prez/fs-go/internal/config"
-	"github.com/emday4prez/fs-go/internal/service"
-	"github.com/emday4prez/fs-go/internal/storage"
+	"github.com/emday4prez/fs-go/internal/file"
 )
 
 func main() {
@@ -16,12 +15,12 @@ func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	cfg := config.Load()
 
-	localStorage, err := storage.NewLocalStorage(cfg.UploadDir)
+	localStorage, err := file.NewLocalStorage(cfg.UploadDir)
 	if err != nil {
 		logger.Error("Failed to create local storage", "error", err)
 		os.Exit(1)
 	}
-	fileService := service.NewFileService(localStorage)
+	fileService := file.NewFileService(localStorage)
 
 	router := api.NewRouter(fileService, cfg, logger)
 
