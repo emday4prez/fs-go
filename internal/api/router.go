@@ -6,10 +6,11 @@ import (
 
 	"github.com/emday4prez/fs-go/internal/config"
 	"github.com/emday4prez/fs-go/internal/file"
+	"github.com/emday4prez/fs-go/internal/user"
 )
 
-func NewRouter(fs *file.FileService, cfg *config.Config, log *slog.Logger) http.Handler {
-	server := NewServer(fs, cfg, log)
+func NewRouter(fs *file.FileService, us *user.Service, cfg *config.Config, log *slog.Logger) http.Handler {
+	server := NewServer(fs, us, cfg, log)
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", server.WelcomeHandler)
