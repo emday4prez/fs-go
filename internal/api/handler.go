@@ -131,3 +131,42 @@ func (s *Server) ListFilesAPI(w http.ResponseWriter, r *http.Request) {
 		s.logger.Error("error encoding json", "error", err)
 	}
 }
+
+func (s *Server) RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
+
+	// in a more real world scenario parse json body
+	if err := r.ParseForm(); err != nil {
+		s.logger.Error("Failed to parse form", "error", err)
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	if username == "" || password == "" {
+		http.Error(w, "Username and password are required", http.StatusBadRequest)
+		return
+	}
+	newUser, err := s.userService.Register(username, password)
+	if err != nil {
+
+		if err == user.ErrUsernameTaken {
+			http.Error(w, err.Error(), http.StatusConflict) // 409
+			return
+		}
+
+		s.logger.Error("Failed to register user", "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated) // 201
+
+	response := map[string]string{
+		"id":       newUser.ID,
+		"username": newUser.Username,
+	}
+	json.NewEncoder(w).Encode(response)
+}
