@@ -31,3 +31,18 @@ func (s *Service) Register(username, password string) (*domain.User, error) {
 
 	return newUser, nil
 }
+
+func (s *Service) Login(username, password string) (*domain.User, error) {
+	user, err := s.storage.FindByUsername(username)
+	if err != nil {
+
+		return nil, err
+	}
+
+	if !user.CheckPassword(password) {
+		// If the password doesn't match, return a generic error.
+		return nil, ErrUserNotFound
+	}
+
+	return user, nil
+}
