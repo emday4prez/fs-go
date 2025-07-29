@@ -30,6 +30,7 @@ func NewRouter(fs *file.FileService, us *user.Service, cfg *config.Config, log *
 	mux.HandleFunc("/download/", server.DownloadHandler)
 	mux.HandleFunc("/api/files", server.ListFilesAPI)
 	mux.HandleFunc("/api/register", server.RegisterUserHandler)
+	mux.HandleFunc("/api/login", server.LoginHandler)
 
 	return mux
 }
