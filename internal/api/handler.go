@@ -178,4 +178,32 @@ func (s *Server) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+	if username == "" || password == "" {
+		s.logger.Warn("Login attempt with empty credentials")
+		http.Error(w, "Username and password are required", http.StatusBadRequest)
+		return
+	}
+
+	loggedInUser, err := s.userService.Login(username, password)
+	if err != nil {
+		s.logger.Error("user service returned an error", "error", err.Error())
+		if err == user.ErrUserNotFound {
+			http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+			return
+		}
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	response := map[string]string{
+		"message":  "Login successful",
+		"userID":   loggedInUser.ID,
+		"username": loggedInUser.Username,
+	}
+	json.NewEncoder(w).Encode(response)
 }

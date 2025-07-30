@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"log"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -16,6 +18,7 @@ func NewUser(id, username, password string) (*User, error) {
 		return nil, err
 	}
 
+	log.Printf("[DEBUG] Creating user '%s' with hash: %s", username, string(hashedPassword))
 	return &User{
 		ID:             id,
 		Username:       username,
