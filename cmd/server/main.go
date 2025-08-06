@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/emday4prez/fs-go/internal/api"
+	"github.com/emday4prez/fs-go/internal/auth"
 	"github.com/emday4prez/fs-go/internal/config"
 	"github.com/emday4prez/fs-go/internal/file"
 	"github.com/emday4prez/fs-go/internal/user"
@@ -15,6 +16,8 @@ func main() {
 
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	cfg := config.Load()
+
+	authService := auth.NewService(cfg.JWTSecret)
 
 	localStorage, err := file.NewLocalStorage(cfg.UploadDir)
 	if err != nil {

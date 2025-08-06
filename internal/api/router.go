@@ -4,12 +4,13 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/emday4prez/fs-go/internal/auth"
 	"github.com/emday4prez/fs-go/internal/config"
 	"github.com/emday4prez/fs-go/internal/file"
 	"github.com/emday4prez/fs-go/internal/user"
 )
 
-func NewRouter(fs *file.FileService, us *user.Service, cfg *config.Config, log *slog.Logger) http.Handler {
+func NewRouter(fs *file.FileService, us *user.Service, as *auth.Service, cfg *config.Config, log *slog.Logger) http.Handler {
 	server := NewServer(fs, us, cfg, log)
 	mux := http.NewServeMux()
 

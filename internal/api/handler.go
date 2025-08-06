@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/emday4prez/fs-go/internal/auth"
 	"github.com/emday4prez/fs-go/internal/config"
 	"github.com/emday4prez/fs-go/internal/file"
 	"github.com/emday4prez/fs-go/internal/user"
@@ -16,14 +17,16 @@ import (
 type Server struct {
 	fileService *file.FileService
 	userService *user.Service
+	authService *auth.Service
 	config      *config.Config
 	logger      *slog.Logger
 }
 
-func NewServer(fs *file.FileService, us *user.Service, cfg *config.Config, log *slog.Logger) *Server {
+func NewServer(fs *file.FileService, us *user.Service, as *auth.Service, cfg *config.Config, log *slog.Logger) *Server {
 	return &Server{
 		fileService: fs,
 		userService: us,
+		authService: as,
 		config:      cfg,
 		logger:      log,
 	}
@@ -197,13 +200,18 @@ func (s *Server) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tokenString, err := s.authService.GenerateJWT(loggedInUser)
+	if err != nil {
+		s.logger.Error("Failed to generate JWT", "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
 	response := map[string]string{
-		"message":  "Login successful",
-		"userID":   loggedInUser.ID,
-		"username": loggedInUser.Username,
+		"token": tokenString,
 	}
 	json.NewEncoder(w).Encode(response)
 }
