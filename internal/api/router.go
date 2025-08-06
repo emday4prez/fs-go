@@ -11,7 +11,7 @@ import (
 )
 
 func NewRouter(fs *file.FileService, us *user.Service, as *auth.Service, cfg *config.Config, log *slog.Logger) http.Handler {
-	server := NewServer(fs, us, cfg, log)
+	server := NewServer(fs, us, as, cfg, log)
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", server.WelcomeHandler)
