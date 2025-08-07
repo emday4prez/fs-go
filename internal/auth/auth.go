@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"time"
 
 	"github.com/emday4prez/fs-go/internal/domain"
@@ -40,4 +41,23 @@ func (s *Service) GenerateJWT(user *domain.User) (string, error) {
 	}
 
 	return signedString, nil
+}
+
+func (s *Service) ValidateJWT(tokenString string) (*CustomClaims, error) {
+	// parse the token with custom claims and secret key
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+		// provides the key for validation.
+		return s.secretKey, nil
+	})
+
+	if err != nil {
+		return nil, err // this could be due to an expired token or invalid signature
+	}
+
+	// Check if the token is valid and get the claims
+	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
+		return claims, nil
+	}
+
+	return nil, errors.New("invalid token")
 }
