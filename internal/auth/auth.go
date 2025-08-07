@@ -54,7 +54,7 @@ func (s *Service) ValidateJWT(tokenString string) (*CustomClaims, error) {
 		return nil, err // this could be due to an expired token or invalid signature
 	}
 
-	// Check if the token is valid and get the claims
+	// check if the token is valid and get the claims
 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
 		return claims, nil
 	}
