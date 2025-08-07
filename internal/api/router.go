@@ -25,13 +25,15 @@ func NewRouter(fs *file.FileService, us *user.Service, as *auth.Service, cfg *co
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}
+	mux.HandleFunc("/api/register", server.RegisterUserHandler)
+	mux.HandleFunc("/api/login", server.LoginHandler)
+
+	listFilesHandler := http.HandlerFunc(server.ListFilesAPI)
 
 	mux.HandleFunc("/upload", uploadMultiplexer)
 	mux.HandleFunc("/list", server.ShowListPage)
 	mux.HandleFunc("/download/", server.DownloadHandler)
-	mux.HandleFunc("/api/files", server.ListFilesAPI)
-	mux.HandleFunc("/api/register", server.RegisterUserHandler)
-	mux.HandleFunc("/api/login", server.LoginHandler)
+	mux.Handle("/api/files", server.authMiddleware(listFilesHandler))
 
 	return mux
 }

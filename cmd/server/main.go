@@ -29,7 +29,7 @@ func main() {
 
 	inMemoryStorage := user.NewInMemoryStorage()
 	userService := user.NewService(inMemoryStorage)
-	router := api.NewRouter(fileService, userService, cfg, logger)
+	router := api.NewRouter(fileService, userService, authService, cfg, logger)
 
 	logger.Info("Server is starting", "port", cfg.Port)
 	if err := http.ListenAndServe(cfg.Port, router); err != nil {
